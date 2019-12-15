@@ -1,5 +1,7 @@
 package net.kamradtfamily.incoming.service.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -21,6 +23,9 @@ public class Stepdefs extends SpringEnabledSteps {
     
     @Autowired
     IncomingClient incomingClient;
+    
+    @Autowired
+    ObjectMapper objectMapper;
 
     Input inputValue;
     int httpStatus;
@@ -52,7 +57,7 @@ public class Stepdefs extends SpringEnabledSteps {
     }
 
     @Then("the input value should be found on the message queue")
-    public void findInputValueOnMessageQueue() {
+    public void findInputValueOnMessageQueue() throws JsonProcessingException {
         Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaReceiver.receive();
 
         String message = kafkaFlux
@@ -60,6 +65,10 @@ public class Stepdefs extends SpringEnabledSteps {
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .blockFirst()
                 .value();
-        log.info("find on message queue the input value " + inputValue);
+        log.info("find on message queue the input value " + message);
+        Input actual = objectMapper.readValue(message, Input.class);
+        assertEquals(inputValue.getKey(),actual.getKey());
+        assertEquals(inputValue.getOptionalValue(), actual.getOptionalValue());
+        assertEquals(inputValue.getValue(), actual.getValue());
     }
 }

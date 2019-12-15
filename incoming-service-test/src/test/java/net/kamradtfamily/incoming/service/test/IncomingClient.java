@@ -24,12 +24,15 @@
 package net.kamradtfamily.incoming.service.test;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incomingcontract.IncomingContract;
 import net.kamradtfamily.incomingcontract.IncomingException;
 import net.kamradtfamily.incomingcontract.Input;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -39,22 +42,25 @@ import reactor.core.publisher.Mono;
  *
  * @author randalkamradt
  */
+@Slf4j
 @Component
 public class IncomingClient implements IncomingContract {
 
     @Override
     public Mono<Void> incoming(Mono<Input> input) throws IncomingException {
-        return WebClient
+        Mono<ResponseEntity<Void>> mresponse = WebClient
                 .builder()
-                .baseUrl("http://localhost:8080")
+                .baseUrl("http://localhost:8081/incoming")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8080"))
+//                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8080"))
                 .build()
                 .put()
-                .uri(URI.create("/incoming"))
                 .body(BodyInserters.fromPublisher(input, Input.class))
                 .retrieve()
-                .bodyToMono(Void.class);
+                .toBodilessEntity();
+        ResponseEntity response = mresponse.block(Duration.ofSeconds(10));
+        log.info("response from put: " + response.getStatusCodeValue());
+        return Mono.empty();
     }
 
 }
