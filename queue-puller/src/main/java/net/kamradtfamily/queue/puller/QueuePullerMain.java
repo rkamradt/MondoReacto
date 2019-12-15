@@ -21,20 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incomingservice;
+package net.kamradtfamily.queue.puller;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  *
  * @author randalkamradt
  */
 @SpringBootApplication
-public class IncomingServiceMain {
+@ComponentScan(basePackages = "net.kamradtfamily")
+public class QueuePullerMain {
 
     public static void main(String[] args) {
-        SpringApplication.run(IncomingServiceMain.class, args);
+        SpringApplication.run(QueuePullerMain.class, args);
     }
 
 }

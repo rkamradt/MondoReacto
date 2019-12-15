@@ -25,6 +25,7 @@ package net.kamradtfamily.incoming.service.test;
 
 import org.junit.runner.JUnitCore;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  *

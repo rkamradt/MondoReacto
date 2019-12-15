@@ -21,19 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incoming.service.test;
+package net.kamradtfamily.incoming.service;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
  * @author randalkamradt
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public abstract class SpringEnabledSteps {
-    
+@SpringBootApplication
+@ComponentScan(basePackages = "net.kamradtfamily.incoming")
+public class IncomingServiceMain {
+
+    public static void main(String[] args) {
+        SpringApplication.run(IncomingServiceMain.class, args);
+    }
+
 }

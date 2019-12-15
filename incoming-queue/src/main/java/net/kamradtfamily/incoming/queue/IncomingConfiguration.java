@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incomingservice;
+package net.kamradtfamily.incoming.queue;
 
 import java.util.HashMap;
 import java.util.List;

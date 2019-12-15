@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incomingservice;
+package net.kamradtfamily.queue.puller;
 
+import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.kamradtfamily.incomingcontract.IncomingContract;
-import net.kamradtfamily.incomingcontract.IncomingException;
-import net.kamradtfamily.incomingcontract.Input;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.kafka.receiver.KafkaReceiver;
+import reactor.kafka.receiver.ReceiverRecord;
 
 /**
  *
@@ -38,18 +41,19 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @RestController
-@RequestMapping("/incoming")
-public class IncomingController {
+@RequestMapping("/queue")
+public class QueuePullerController {
 
-    private final IncomingContract incomingImplementation;
+    @Autowired
+    KafkaReceiver<String,String> kafkaReceiver;
 
-    public IncomingController(final IncomingContract incomingImplementation) {
-        this.incomingImplementation = incomingImplementation;
-    }
-
-    @PutMapping()
-    private Mono<Void> getEmployeeById(final Mono<Input> input) throws IncomingException {
-        log.info("incoming input");
-        return incomingImplementation.incoming(input);
+    @GetMapping(path="/kamradt/consumer", produces = MediaType.APPLICATION_JSON_VALUE)
+    Mono<String> getFromKamradtConsumer() {
+        return kafkaReceiver
+                .receive()
+                .log()
+                .doOnNext(r -> r.receiverOffset().acknowledge())
+                .map(ReceiverRecord::value)
+                .publishNext();
     }
 }

@@ -26,3 +26,5 @@ hs_err_pid*
 /incoming-service-test/target/
 /incoming-contract/target/
 /incoming-service/target/
+/queue-puller/target/
+/incoming-queue/target/

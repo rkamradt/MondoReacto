@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incomingcontract.Input;
 
@@ -35,6 +36,7 @@ public class Stepdefs extends SpringEnabledSteps {
         inputValue = Input.builder()
                 .value("value")
                 .key("key")
+                .optionalValue(Optional.empty())
                 .build();
         log.info("generated good input value " + inputValue);
     }

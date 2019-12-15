@@ -21,21 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incoming.service.test;
+package net.kamradtfamily.incoming.service;
 
-import java.net.URI;
-import java.time.Duration;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incomingcontract.IncomingContract;
 import net.kamradtfamily.incomingcontract.IncomingException;
 import net.kamradtfamily.incomingcontract.Input;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 /**
@@ -43,23 +38,19 @@ import reactor.core.publisher.Mono;
  * @author randalkamradt
  */
 @Slf4j
-@Component
-public class IncomingClient implements IncomingContract {
+@RestController
+@RequestMapping("/incoming")
+public class IncomingController {
 
-    @Override
-    public Mono<Void> incoming(Mono<Input> input) throws IncomingException {
-        Mono<ResponseEntity<Void>> mresponse = WebClient
-                .builder()
-                .baseUrl("http://localhost:8081/incoming")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build()
-                .post()
-                .body(BodyInserters.fromPublisher(input, Input.class))
-                .retrieve()
-                .toBodilessEntity();
-        ResponseEntity response = mresponse.block(Duration.ofSeconds(10));
-        log.info("response from put: " + response.getStatusCodeValue());
-        return Mono.empty();
+    private final IncomingContract incomingImplementation;
+
+    public IncomingController(final IncomingContract incomingImplementation) {
+        this.incomingImplementation = incomingImplementation;
     }
 
+    @PostMapping()
+    private Mono<Void> incomingInput(@RequestBody final Mono<Input> input) throws IncomingException {
+        log.info("incoming input: " + input);
+        return incomingImplementation.incoming(input);
+    }
 }
