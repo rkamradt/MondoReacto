@@ -28,3 +28,6 @@ hs_err_pid*
 /incoming-service/target/
 /queue-puller/target/
 /incoming-queue/target/
+/incoming-datamodel/target/
+/incoming-persist/target/
+/incoming-persist-test/target/

@@ -7,7 +7,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import net.kamradtfamily.incomingcontract.Input;
+import net.kamradtfamily.incoming.contract.Input;
 
 import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -21,36 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incoming.service;
+package net.kamradtfamily.incoming.datamodel;
 
-import lombok.extern.slf4j.Slf4j;
-import net.kamradtfamily.incoming.contract.IncomingContract;
-import net.kamradtfamily.incoming.contract.IncomingException;
-import net.kamradtfamily.incoming.contract.Input;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 /**
  *
  * @author randalkamradt
  */
-@Slf4j
-@RestController
-@RequestMapping("/incoming")
-public class IncomingController {
+@EnableReactiveMongoRepositories
+public class MondoConfig extends AbstractReactiveMongoConfiguration {
 
-    private final IncomingContract incomingImplementation;
-
-    public IncomingController(final IncomingContract incomingImplementation) {
-        this.incomingImplementation = incomingImplementation;
+    @Bean
+    public MongoClient mongoClient() {
+        return MongoClients.create();
     }
 
-    @PostMapping()
-    private Mono<Void> incomingInput(@RequestBody final Mono<Input> input) throws IncomingException {
-        log.info("incoming input: " + input);
-        return incomingImplementation.incoming(input);
+    @Override
+    protected String getDatabaseName() {
+        return "mondodata";
     }
+
+    @Override
+    public MongoClient reactiveMongoClient() {
+        return mongoClient();
+    }
+
 }

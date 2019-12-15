@@ -21,6 +21,9 @@
         <module>incoming-service</module>
         <module>incoming-service-test</module>
         <module>queue-puller</module>
+        <module>incoming-persist</module>
+        <module>incoming-datamodel</module>
+        <module>incoming-persist-test</module>
     </modules>
     <properties>
         <java.version>11</java.version>

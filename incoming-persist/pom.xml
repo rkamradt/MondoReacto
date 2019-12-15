@@ -6,7 +6,7 @@
         <artifactId>mondoreacto</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>incoming-service</artifactId>
+    <artifactId>incoming-persist</artifactId>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -56,7 +56,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>    
+        </dependency>
+        <dependency>
+            <groupId>net.kamradtfamily</groupId>
+            <artifactId>incoming-datamodel</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -70,7 +76,7 @@
                 <version>1.6.1</version>
                 <configuration>
                     <to>
-                        <image>docker.io/rlkamradt/incoming-service:${project.version}</image>
+                        <image>docker.io/rlkamradt/incoming-persist:${project.version}</image>
                     </to>
                 </configuration>
                 <executions>

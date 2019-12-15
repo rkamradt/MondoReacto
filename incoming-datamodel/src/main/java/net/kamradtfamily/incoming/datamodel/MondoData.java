@@ -21,13 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incomingcontract;
+package net.kamradtfamily.incoming.datamodel;
 
-import reactor.core.publisher.Mono;
+import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  *
  * @author randalkamradt
  */
-public interface IncomingContract {
-    Mono<Void> incoming(Mono<Input> input) throws IncomingException;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
+@Builder
+@Document
+public class MondoData {
+    @Id String id;
+    String name;
+    Optional<String> description;
+    
 }
