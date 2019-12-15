@@ -23,7 +23,7 @@
  */
 package net.kamradtfamily.incoming.service.test;
 
-import org.springframework.boot.SpringApplication;
+import org.junit.runner.JUnitCore;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -35,7 +35,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringBootCucumberApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SpringBootCucumberApplication.class, args);
+    public static void main(final String[] args) throws Throwable {
+        JUnitCore.main(RunCucumberTest.class.getCanonicalName());
     }
 }

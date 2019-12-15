@@ -52,7 +52,6 @@ public class IncomingClient implements IncomingContract {
                 .builder()
                 .baseUrl("http://localhost:8081/incoming")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8080"))
                 .build()
                 .put()
                 .body(BodyInserters.fromPublisher(input, Input.class))
