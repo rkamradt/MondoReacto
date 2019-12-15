@@ -23,6 +23,7 @@
  */
 package net.kamradtfamily.incomingservice;
 
+import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incomingcontract.IncomingContract;
 import net.kamradtfamily.incomingcontract.IncomingException;
 import net.kamradtfamily.incomingcontract.Input;
@@ -35,6 +36,7 @@ import reactor.core.publisher.Mono;
  *
  * @author randalkamradt
  */
+@Slf4j
 @RestController
 @RequestMapping("/incoming")
 public class IncomingController {
@@ -47,6 +49,7 @@ public class IncomingController {
 
     @PutMapping()
     private Mono<Void> getEmployeeById(final Mono<Input> input) throws IncomingException {
+        log.info("incoming input");
         return incomingImplementation.incoming(input);
     }
 }

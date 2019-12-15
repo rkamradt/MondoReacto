@@ -25,13 +25,20 @@ package net.kamradtfamily.incomingservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incomingcontract.IncomingContract;
 import net.kamradtfamily.incomingcontract.IncomingException;
 import net.kamradtfamily.incomingcontract.Input;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.kafka.sender.KafkaSender;
+import reactor.kafka.sender.SenderRecord;
 
 /**
  *
@@ -49,13 +56,19 @@ public class IncomingImplementation implements IncomingContract {
     }
     @Override
     public Mono<Void> incoming(final Mono<Input> input) throws IncomingException {
-        try {
-            log.info("sending an " + input);
-            String message = mapper.writeValueAsString(input);
-            return sender.send(Mono.just(message)).next();
-        } catch (JsonProcessingException ex) {
-            throw new IncomingException("error converting input to message", ex);
-        }
+            final Mono<SenderRecord> message = input.map(i -> {
+                try {
+                    String string = mapper.writeValueAsString(i);
+                    log.info("incoming string " + string + " being send to message queue");
+                    return string;
+                } catch (JsonProcessingException ex) {
+                    throw new RuntimeException("error parsing input", ex);
+                }
+            })
+            .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m));
+            return sender.<String>send(message)
+              .doOnError(e -> log.error("Send failed", e))
+              .then();
     }
 
 }
