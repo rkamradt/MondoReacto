@@ -36,6 +36,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -60,6 +61,16 @@ public class IncomingClient implements IncomingContract {
         ResponseEntity response = mresponse.block(Duration.ofSeconds(10));
         log.info("response from put: " + response.getStatusCodeValue());
         return Mono.empty();
+    }
+
+    @Override
+    public Flux<Input> alloutput() throws IncomingException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Mono<Input> output(String key) throws IncomingException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

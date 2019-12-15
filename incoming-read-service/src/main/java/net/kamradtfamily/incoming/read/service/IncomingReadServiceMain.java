@@ -21,28 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incoming.persist;
+package net.kamradtfamily.incoming.read.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
  *
  * @author randalkamradt
  */
-@Slf4j
 @SpringBootApplication
 @ComponentScan(basePackages = "net.kamradtfamily.incoming")
-public class IncomingPersistMain {
+public class IncomingReadServiceMain {
 
-    public static void main(String[] args) throws InterruptedException {
-        log.info("sleeping for a minute to stabilize");
-        Thread.sleep(30000); // give services a chance to settle before starting pump
-        ConfigurableApplicationContext context = SpringApplication.run(IncomingPersistMain.class, args);
-        IncomingPersistBean mainBean = context.getBean(IncomingPersistBean.class);
-        mainBean.run();
+    public static void main(String[] args) {
+        SpringApplication.run(IncomingReadServiceMain.class, args);
     }
+
 }

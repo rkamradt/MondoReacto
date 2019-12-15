@@ -21,20 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incoming.service;
+package net.kamradtfamily.incoming.read.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.IncomingContract;
 import net.kamradtfamily.incoming.contract.IncomingException;
 import net.kamradtfamily.incoming.contract.Input;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import net.kamradtfamily.incoming.datamodel.MondoData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.kafka.sender.KafkaSender;
-import reactor.kafka.sender.SenderRecord;
 
 /**
  *
@@ -42,39 +40,36 @@ import reactor.kafka.sender.SenderRecord;
  */
 @Slf4j
 @Component
-public class IncomingImplementation implements IncomingContract {
-    private final KafkaSender sender;
-    private final ObjectMapper mapper;
+public class IncomingReadImplementation implements IncomingContract {
+    @Autowired
+    ReactiveMongoTemplate template;
+
     
-    public IncomingImplementation(KafkaSender sender, ObjectMapper mapper) {
-        this.sender = sender;
-        this.mapper = mapper;
-    }
     @Override
     public Mono<Void> incoming(final Mono<Input> input) throws IncomingException {
-            final Mono<SenderRecord> message = input.map(i -> {
-                try {
-                    String string = mapper.writeValueAsString(i);
-                    log.info("incoming string " + string + " being send to message queue");
-                    return string;
-                } catch (JsonProcessingException ex) {
-                    throw new RuntimeException("error parsing input", ex);
-                }
-            })
-            .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m));
-            return sender.<String>send(message)
-              .doOnError(e -> log.error("Send failed", e))
-              .then();
-    }
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     }
 
     @Override
     public Flux<Input> alloutput() throws IncomingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return template
+                .findAll(MondoData.class)
+                .map(m -> mapToInput(m));
     }
 
     @Override
     public Mono<Input> output(String key) throws IncomingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return template
+                .findById(key, MondoData.class)
+                .map(m -> mapToInput(m));
+    }
+
+    private Input mapToInput(MondoData m) {
+        return Input.builder()
+                .key(m.getId())
+                .value(m.getName())
+                .optionalValue(m.getDescription())
+                .build();
     }
 
 }

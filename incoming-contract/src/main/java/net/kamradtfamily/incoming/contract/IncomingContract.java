@@ -23,6 +23,7 @@
  */
 package net.kamradtfamily.incoming.contract;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 /**
  *
@@ -30,4 +31,6 @@ import reactor.core.publisher.Mono;
  */
 public interface IncomingContract {
     Mono<Void> incoming(Mono<Input> input) throws IncomingException;
+    Flux<Input> alloutput() throws IncomingException;
+    Mono<Input> output(String key) throws IncomingException;
 }

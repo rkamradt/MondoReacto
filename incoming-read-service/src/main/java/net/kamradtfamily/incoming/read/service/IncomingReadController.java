@@ -21,28 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.kamradtfamily.incoming.persist;
+package net.kamradtfamily.incoming.read.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
+import net.kamradtfamily.incoming.contract.IncomingContract;
+import net.kamradtfamily.incoming.contract.IncomingException;
+import net.kamradtfamily.incoming.contract.Input;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  *
  * @author randalkamradt
  */
 @Slf4j
-@SpringBootApplication
-@ComponentScan(basePackages = "net.kamradtfamily.incoming")
-public class IncomingPersistMain {
+@RestController
+@RequestMapping("/incoming")
+public class IncomingReadController {
 
-    public static void main(String[] args) throws InterruptedException {
-        log.info("sleeping for a minute to stabilize");
-        Thread.sleep(30000); // give services a chance to settle before starting pump
-        ConfigurableApplicationContext context = SpringApplication.run(IncomingPersistMain.class, args);
-        IncomingPersistBean mainBean = context.getBean(IncomingPersistBean.class);
-        mainBean.run();
+    private final IncomingContract incomingImplementation;
+
+    public IncomingReadController(final IncomingContract incomingImplementation) {
+        this.incomingImplementation = incomingImplementation;
+    }
+
+    @GetMapping("/{id}")
+    private Mono<Input> get(@PathVariable String id) throws IncomingException {
+        return incomingImplementation.output(id);
+    }
+    
+    @GetMapping()
+    private Flux<Input> getAll() throws IncomingException {
+        return incomingImplementation.alloutput();
     }
 }

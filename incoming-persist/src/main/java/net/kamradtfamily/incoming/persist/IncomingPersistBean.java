@@ -25,15 +25,12 @@ package net.kamradtfamily.incoming.persist;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.Input;
 import net.kamradtfamily.incoming.datamodel.MondoData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.KafkaReceiver;
 
 /**

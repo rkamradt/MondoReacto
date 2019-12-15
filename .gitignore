@@ -31,3 +31,4 @@ hs_err_pid*
 /incoming-datamodel/target/
 /incoming-persist/target/
 /incoming-persist-test/target/
+/incoming-read-service/target/
