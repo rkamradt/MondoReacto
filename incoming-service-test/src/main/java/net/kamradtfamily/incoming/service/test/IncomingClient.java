@@ -23,9 +23,7 @@
  */
 package net.kamradtfamily.incoming.service.test;
 
-import java.net.URI;
 import java.time.Duration;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.IncomingContract;
 import net.kamradtfamily.incoming.contract.IncomingException;
@@ -49,7 +47,7 @@ public class IncomingClient implements IncomingContract {
 
     @Override
     public Mono<Void> incoming(Mono<Input> input) throws IncomingException {
-        Mono<ResponseEntity<Void>> mresponse = WebClient
+        WebClient
                 .builder()
                 .baseUrl("http://localhost:8081/incoming")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -57,9 +55,8 @@ public class IncomingClient implements IncomingContract {
                 .post()
                 .body(BodyInserters.fromPublisher(input, Input.class))
                 .retrieve()
-                .toBodilessEntity();
-        ResponseEntity response = mresponse.block(Duration.ofSeconds(10));
-        log.info("response from put: " + response.getStatusCodeValue());
+                .toBodilessEntity()
+                .subscribe(r -> log.info("returning status " + r.getStatusCodeValue()));
         return Mono.empty();
     }
 

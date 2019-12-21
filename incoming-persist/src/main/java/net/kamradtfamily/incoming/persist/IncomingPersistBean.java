@@ -45,10 +45,10 @@ public class IncomingPersistBean {
     @Autowired 
     ReactiveMongoTemplate template;
     @Autowired
-    KafkaReceiver<String, String> kafkaReceiver;
+    KafkaReceiver<String, String> kafkaKamradtReceiver;
 
     public void run() {
-        kafkaReceiver
+        kafkaKamradtReceiver
                 .receive()
                 .log()
                 .doOnNext(r -> r.receiverOffset().acknowledge())

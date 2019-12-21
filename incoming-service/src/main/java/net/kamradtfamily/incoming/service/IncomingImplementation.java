@@ -30,6 +30,7 @@ import net.kamradtfamily.incoming.contract.IncomingContract;
 import net.kamradtfamily.incoming.contract.IncomingException;
 import net.kamradtfamily.incoming.contract.Input;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -43,28 +44,27 @@ import reactor.kafka.sender.SenderRecord;
 @Slf4j
 @Component
 public class IncomingImplementation implements IncomingContract {
-    private final KafkaSender sender;
-    private final ObjectMapper mapper;
-    
-    public IncomingImplementation(KafkaSender sender, ObjectMapper mapper) {
-        this.sender = sender;
-        this.mapper = mapper;
-    }
+
+    @Autowired
+    private KafkaSender kafkaKamradtSender;
+    @Autowired
+    private ObjectMapper mapper;
+
     @Override
     public Mono<Void> incoming(final Mono<Input> input) throws IncomingException {
-            final Mono<SenderRecord> message = input.map(i -> {
-                try {
-                    String string = mapper.writeValueAsString(i);
-                    log.info("incoming string " + string + " being send to message queue");
-                    return string;
-                } catch (JsonProcessingException ex) {
-                    throw new RuntimeException("error parsing input", ex);
-                }
-            })
-            .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m));
-            return sender.<String>send(message)
-              .doOnError(e -> log.error("Send failed", e))
-              .then();
+        input.map(i -> {
+            try {
+                String string = mapper.writeValueAsString(i);
+                log.info("incoming string " + string + " being send to message queue");
+                return string;
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException("error parsing input", ex);
+            }
+        })
+                .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m))
+                .mergeWith(kafkaKamradtSender.createOutbound())
+                .subscribe(c -> log.info("Send succeeded"), e -> log.error("Send failed", e));
+        return Mono.empty();
     }
 
     @Override
