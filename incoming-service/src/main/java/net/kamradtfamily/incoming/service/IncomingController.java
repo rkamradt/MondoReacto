@@ -23,6 +23,7 @@
  */
 package net.kamradtfamily.incoming.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.IncomingContract;
 import net.kamradtfamily.incoming.contract.IncomingException;
@@ -43,14 +44,17 @@ import reactor.core.publisher.Mono;
 public class IncomingController {
 
     private final IncomingContract incomingImplementation;
-
-    public IncomingController(final IncomingContract incomingImplementation) {
+    private final ObjectMapper objectMapper;
+    
+    public IncomingController(final ObjectMapper objectMapper, final IncomingContract incomingImplementation) {
+        this.objectMapper = objectMapper;
         this.incomingImplementation = incomingImplementation;
     }
 
     @PostMapping()
-    private Mono<Void> incomingInput(@RequestBody final Mono<Input> input) throws IncomingException {
-        log.info("incoming input: " + input);
-        return incomingImplementation.incoming(input);
+    private Mono<Void> incomingInput(@RequestBody Input payload) throws IncomingException {
+        log.info("incoming payload " + payload);
+        return incomingImplementation.incoming(Mono.just(payload));
     }
+
 }

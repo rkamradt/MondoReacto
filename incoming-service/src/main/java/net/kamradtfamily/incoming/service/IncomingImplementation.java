@@ -52,20 +52,22 @@ public class IncomingImplementation implements IncomingContract {
 
     @Override
     public Mono<Void> incoming(final Mono<Input> input) throws IncomingException {
-        input.map(i -> {
-            try {
-                String string = mapper.writeValueAsString(i);
-                log.info("incoming string " + string + " being send to message queue");
-                return string;
-            } catch (JsonProcessingException ex) {
-                throw new RuntimeException("error parsing input", ex);
-            }
-        })
-                .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m))
-                .mergeWith(kafkaKamradtSender.createOutbound())
-                .subscribe(c -> log.info("Send succeeded"), e -> log.error("Send failed", e));
+        input.map(i -> transformToString(i))
+            .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m))
+            .mergeWith(kafkaKamradtSender.createOutbound())
+            .subscribe(c -> log.info("Send succeeded"), e -> log.error("Send failed", e));
         return Mono.empty();
     }
+    
+    private String transformToString(Input input) {
+        try {
+            String string = mapper.writeValueAsString(input);
+            log.info("incoming string " + string + " being send to message queue");
+            return string;
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException("error parsing input", ex);
+        }
+    }    
 
     @Override
     public Flux<Input> alloutput() throws IncomingException {
