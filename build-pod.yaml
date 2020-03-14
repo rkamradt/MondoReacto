@@ -3,12 +3,12 @@ kind: Pod
 spec:
   containers:
     - name: maven
-      image: maven:3.5.4-jdk-8-slim
+      image: maven:3.6.3-jdk-11-slim
       command: ["tail", "-f", "/dev/null"]
       imagePullPolicy: Always
       resources:
         requests:
-          memory: "500Mi"
-          cpu: "500m"
+          memory: "4Gi"
+          cpu: "125m"
         limits:
-          memory: "500Mi"
+          memory: "4Gi"
