@@ -72,6 +72,7 @@
                     <to>
                         <image>docker.io/rlkamradt/incoming-service:${project.version}</image>
                     </to>
+                    <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
             </plugin>
         </plugins>
