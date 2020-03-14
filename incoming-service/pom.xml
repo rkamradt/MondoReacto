@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>    
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -73,14 +73,6 @@
                         <image>docker.io/rlkamradt/incoming-service:${project.version}</image>
                     </to>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

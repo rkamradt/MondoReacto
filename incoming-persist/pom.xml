@@ -76,17 +76,9 @@
                 <version>1.6.1</version>
                 <configuration>
                     <to>
-                        <image>docker.io/rlkamradt/incoming-persist:${project.version}</image>
+                        <image>${container-repo}/incoming-persist:${project.version}</image>
                     </to>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
