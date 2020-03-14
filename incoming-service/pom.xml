@@ -70,7 +70,7 @@
                 <version>1.6.1</version>
                 <configuration>
                     <to>
-                        <image>docker.io/rlkamradt/incoming-service:${project.version}</image>
+                        <image>${container-repo}/incoming-service:${project.version}</image>
                     </to>
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
