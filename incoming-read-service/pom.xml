@@ -63,7 +63,7 @@
                 <version>1.6.1</version>
                 <configuration>
                     <to>
-                      <image>${container-repo}/incoming-readservice:${project.version}</image>
+                      <image>${container-repo}/incoming-read-service:${project.version}</image>
                     </to>
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
