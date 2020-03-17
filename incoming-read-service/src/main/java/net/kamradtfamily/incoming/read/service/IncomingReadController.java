@@ -43,6 +43,9 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/incoming")
 public class IncomingReadController {
 
+    @Value("${spring.data.mongodb.password}")
+    String password;
+
     private final IncomingContract incomingImplementation;
 
     public IncomingReadController(final IncomingContract incomingImplementation) {
@@ -53,9 +56,10 @@ public class IncomingReadController {
     private Mono<Input> get(@PathVariable String id) throws IncomingException {
         return incomingImplementation.output(id);
     }
-    
+
     @GetMapping()
     private Flux<Input> getAll() throws IncomingException {
+        log.info("password = " + password);
         return incomingImplementation.alloutput();
     }
 }
