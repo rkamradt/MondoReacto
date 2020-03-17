@@ -34,5 +34,26 @@
         <maven.compiler.target>11</maven.compiler.target>
         <container-repo>docker.io/rlkamradt</container-repo>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <injectAllReactorProjects>false</injectAllReactorProjects>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
