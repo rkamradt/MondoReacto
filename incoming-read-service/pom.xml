@@ -64,6 +64,9 @@
                 <configuration>
                     <to>
                       <image>${container-repo}/incoming-read-service:${project.version}-${git.commit.id.abbrev}</image>
+                        <tags>
+                            <tag>latest</tag>
+                        </tags>
                     </to>
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
