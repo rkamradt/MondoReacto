@@ -70,7 +70,10 @@
                 <version>1.6.1</version>
                 <configuration>
                     <to>
-                        <image>${container-repo}/incoming-service:${project.version}</image>
+                        <image>${container-repo}/incoming-service:${project.version}-${git.commit.id.abbrev}</image>
+                        <tags>
+                            <tag>latest</tag>
+                        </tags>
                     </to>
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
