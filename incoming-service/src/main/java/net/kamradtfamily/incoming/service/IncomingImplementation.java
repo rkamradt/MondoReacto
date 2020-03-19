@@ -36,6 +36,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderRecord;
+import reactor.kafka.sender.SenderResult;
 
 /**
  *
@@ -46,19 +47,23 @@ import reactor.kafka.sender.SenderRecord;
 public class IncomingImplementation implements IncomingContract {
 
     @Autowired
-    private KafkaSender kafkaKamradtSender;
+    private KafkaSender<String, String> kafkaKamradtSender;
     @Autowired
     private ObjectMapper mapper;
 
     @Override
-    public Mono<Void> incoming(final Mono<Input> input) throws IncomingException {
-        input.map(i -> transformToString(i))
-            .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m))
-            .mergeWith(kafkaKamradtSender.createOutbound())
-            .subscribe(c -> log.info("Send succeeded"), e -> log.error("Send failed", e));
-        return Mono.empty();
+    public Mono<String> incoming(final Mono<Input> input) throws IncomingException {
+        return kafkaKamradtSender
+                .send(input
+                        .map(m -> transformToString(m))
+                        .map(m -> new ProducerRecord<String, String>("kamradt", m))
+                        .map(p -> SenderRecord.<String, String, Integer>create(p, 1)))
+                .doOnError(e -> log.error("error sending to kafka", e))
+                .doOnNext(m -> log.info("sending " + m))
+                .map(m -> m.toString())
+                .publishNext();
     }
-    
+
     private String transformToString(Input input) {
         try {
             String string = mapper.writeValueAsString(input);
@@ -71,12 +76,12 @@ public class IncomingImplementation implements IncomingContract {
 
     @Override
     public Flux<Input> alloutput() throws IncomingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported by this implementation");
     }
 
     @Override
     public Mono<Input> output(String key) throws IncomingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported by this implementation");
     }
 
 }

@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.kamradtfamily</groupId>
         <artifactId>mondoreacto</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>incoming-datamodel</artifactId>
     <packaging>jar</packaging>

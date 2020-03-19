@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author randalkamradt
  */
 public interface IncomingContract {
-    Mono<Void> incoming(Mono<Input> input) throws IncomingException;
+    Mono<String> incoming(Mono<Input> input) throws IncomingException;
     Flux<Input> alloutput() throws IncomingException;
     Mono<Input> output(String key) throws IncomingException;
 }

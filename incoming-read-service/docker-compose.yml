@@ -27,14 +27,14 @@ services:
     ports:
       - 27017:27017
   incoming:
-    image: 'rlkamradt/incoming-service:1.0-SNAPSHOT'
+    image: 'rlkamradt/incoming-service:latest'
     ports:
       - 8081:8080
     depends_on:
       - kafka
       - mongo
   persist:
-    image: 'rlkamradt/incoming-persist:1.0-SNAPSHOT'
+    image: 'rlkamradt/incoming-persist:latest'
     ports:
       - 8082:8080
     depends_on:

@@ -46,8 +46,8 @@ public class IncomingReadImplementation implements IncomingContract {
 
     
     @Override
-    public Mono<Void> incoming(final Mono<Input> input) throws IncomingException {
-       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Mono<String> incoming(final Mono<Input> input) throws IncomingException {
+       throw new UnsupportedOperationException("Not supported by this implementation");
      }
 
     @Override

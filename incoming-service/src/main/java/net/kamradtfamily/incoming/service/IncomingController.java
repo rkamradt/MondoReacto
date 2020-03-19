@@ -52,7 +52,7 @@ public class IncomingController {
     }
 
     @PostMapping()
-    private Mono<Void> incomingInput(@RequestBody Input payload) throws IncomingException {
+    private Mono<String> incomingInput(@RequestBody Input payload) throws IncomingException {
         log.info("incoming payload " + payload);
         return incomingImplementation.incoming(Mono.just(payload));
     }

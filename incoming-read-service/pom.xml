@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.kamradtfamily</groupId>
         <artifactId>mondoreacto</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>incoming-read-service</artifactId>
     <packaging>jar</packaging>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>net.kamradtfamily</groupId>
             <artifactId>incoming-contract</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <!-- logging -->
         <dependency>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>net.kamradtfamily</groupId>
             <artifactId>incoming-datamodel</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>

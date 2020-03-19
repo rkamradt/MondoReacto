@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.kamradtfamily</groupId>
         <artifactId>mondoreacto</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>queue-puller</artifactId>
     <packaging>jar</packaging>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>net.kamradtfamily</groupId>
             <artifactId>incoming-queue</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <!-- logging -->
         <dependency>

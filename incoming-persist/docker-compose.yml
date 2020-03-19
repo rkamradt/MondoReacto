@@ -28,7 +28,7 @@ services:
     ports:
       - 27017:27017
   myapp:
-    image: 'rlkamradt/incoming-service:1.0-SNAPSHOT'
+    image: 'rlkamradt/incoming-service:latest'
     ports:
       - 8081:8080
     depends_on:

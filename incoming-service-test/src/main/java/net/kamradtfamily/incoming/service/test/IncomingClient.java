@@ -46,8 +46,8 @@ import reactor.core.publisher.Mono;
 public class IncomingClient implements IncomingContract {
 
     @Override
-    public Mono<Void> incoming(Mono<Input> input) throws IncomingException {
-        WebClient
+    public Mono<String> incoming(Mono<Input> input) throws IncomingException {
+        return WebClient
                 .builder()
                 .baseUrl("http://localhost:8081/incoming")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -55,19 +55,17 @@ public class IncomingClient implements IncomingContract {
                 .post()
                 .body(BodyInserters.fromPublisher(input, Input.class))
                 .retrieve()
-                .toBodilessEntity()
-                .subscribe(r -> log.info("returning status " + r.getStatusCodeValue()));
-        return Mono.empty();
+                .bodyToMono(String.class);
     }
 
     @Override
     public Flux<Input> alloutput() throws IncomingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        throw new UnsupportedOperationException("Not supported by this implementation");
+     }
 
     @Override
     public Mono<Input> output(String key) throws IncomingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported by this implementation");
     }
 
 }
