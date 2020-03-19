@@ -51,7 +51,6 @@ public class QueuePullerController {
     Mono<String> getFromKamradtConsumer() {
         return kafkaReceiver
                 .receive()
-                .log()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .map(ReceiverRecord::value)
                 .publishNext();

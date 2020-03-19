@@ -63,7 +63,6 @@ public class Stepdefs extends SpringEnabledSteps {
         Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaReceiver.receive();
 
         String message = kafkaFlux
-                .log()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .blockFirst()
                 .value();

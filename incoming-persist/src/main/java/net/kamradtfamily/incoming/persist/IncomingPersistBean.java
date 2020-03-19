@@ -50,11 +50,11 @@ public class IncomingPersistBean {
     public void run() {
         kafkaKamradtReceiver
                 .receive()
-                .log()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .map(r -> mapToInput(r.value()))
                 .map(r -> mapToMondoData(r))
-                .subscribe(r -> template.save(r), e -> log.error("Error in subscription", e));
+                .flatMap(r -> template.save(r))
+                .subscribe(r -> log.info("saved " + r), e -> log.error("Error in subscription", e));
                 
     }
 
