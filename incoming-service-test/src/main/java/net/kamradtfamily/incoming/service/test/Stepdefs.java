@@ -36,7 +36,7 @@ public class Stepdefs extends SpringEnabledSteps {
         inputValue = Input.builder()
                 .value("value")
                 .key("key")
-                .optionalValue(Optional.empty())
+                .optionalValue("")
                 .build();
         log.info("generated good input value " + inputValue);
     }

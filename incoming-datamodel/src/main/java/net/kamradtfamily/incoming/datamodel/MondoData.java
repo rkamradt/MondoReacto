@@ -47,6 +47,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class MondoData {
     @Id String id;
     String name;
-    Optional<String> description;
+    String description;
     
 }

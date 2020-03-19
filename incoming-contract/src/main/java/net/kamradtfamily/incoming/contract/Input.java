@@ -45,5 +45,5 @@ import lombok.ToString;
 public class Input {
     String key;
     String value;
-    Optional<String> optionalValue;
+    String optionalValue;
 }

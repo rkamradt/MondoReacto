@@ -60,7 +60,6 @@ public class IncomingReadController {
 
     @GetMapping()
     private Flux<Input> getAll() throws IncomingException {
-        log.info("password = " + password);
         return incomingImplementation.alloutput();
     }
 }
