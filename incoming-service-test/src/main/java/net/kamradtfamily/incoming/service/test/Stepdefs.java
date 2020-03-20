@@ -69,11 +69,15 @@ public class Stepdefs extends SpringEnabledSteps {
         log.info("looking for input value on the message queue");
         Input actual = kafkaKamradtTestReceiver.receive()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
+                .doOnNext(r -> log.info("receiver record " + r))
                 .map(r -> parseToInput(r.value()))
                 .filter(i -> i.isPresent())
                 .map(i -> i.get())
+                .doOnNext(i -> log.info("prefilter value " + i))
                 .filter(i -> i.equals(inputValue))
+                .doOnNext(i -> log.info("postfilter value " + i))
                 .publishNext()
+                .doOnNext(i -> log.info("published value " + i))
                 .block(Duration.ofSeconds(10));
         log.info("find on message queue the input value " + actual);
         assertEquals(inputValue, actual);
