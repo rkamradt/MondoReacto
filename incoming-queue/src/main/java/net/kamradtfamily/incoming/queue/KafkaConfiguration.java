@@ -67,16 +67,16 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    KafkaSender kafkaKamradtSender() {
+    KafkaSender<String, String> kafkaKamradtSender() {
         return kafkaCommonSender(kamradtTopic);
     }
 
     @Bean
-    KafkaReceiver kafkaKamradtReceiver() {
+    KafkaReceiver<String, String> kafkaKamradtReceiver() {
         return kafkaCommonReceiver(kamradtTopic, kamradtGroupId);
     }
     
-    protected KafkaReceiver kafkaCommonReceiver(String topic, String groupId) {
+    protected KafkaReceiver<String, String> kafkaCommonReceiver(String topic, String groupId) {
         final Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -85,20 +85,20 @@ public class KafkaConfiguration {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 
-        return new DefaultKafkaReceiver(
+        return new DefaultKafkaReceiver<String, String>(
                 ConsumerFactory.INSTANCE,
-                ReceiverOptions.create(configProps).subscription(List.of(topic))
+                ReceiverOptions.<String, String>create(configProps).subscription(List.of(topic))
         );
     }
     
-    KafkaSender kafkaCommonSender(String topic) {
+    KafkaSender<String, String> kafkaCommonSender(String topic) {
         final Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.CLIENT_ID_CONFIG, topic);
-        final SenderOptions<Integer, String> producerOptions = SenderOptions.create(configProps);
-        return KafkaSender.create(producerOptions);
+        final SenderOptions<String, String> producerOptions = SenderOptions.create(configProps);
+        return KafkaSender.<String, String>create(producerOptions);
     }
 
 }
