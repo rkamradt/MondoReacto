@@ -76,9 +76,9 @@ public class Stepdefs extends SpringEnabledSteps {
                 .doOnNext(i -> log.info("prefilter value " + i))
                 .filter(i -> i.equals(inputValue))
                 .doOnNext(i -> log.info("postfilter value " + i))
-                .publishNext()
+                .take(1)
                 .doOnNext(i -> log.info("published value " + i))
-                .block(Duration.ofSeconds(10));
+                .blockFirst(Duration.ofSeconds(10));
         log.info("find on message queue the input value " + actual);
         assertEquals(inputValue, actual);
     }
