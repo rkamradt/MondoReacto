@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+
+import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,7 +58,7 @@ public class Stepdefs extends SpringEnabledSteps {
         httpStatus = 200; // all other status will throw an exception
     }
 
-    @Then("the return value should be {value}")
+    @Then("the return value should be {int}")
     public void checkReturnValue(int value) {
         log.info("checking return value of " + httpStatus + " expected " + value);
         assertEquals(value, httpStatus);
@@ -65,12 +67,11 @@ public class Stepdefs extends SpringEnabledSteps {
     @Then("the input value should be found on the message queue")
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
         log.info("looking for input value on the message queue");
-        Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaKamradtTestReceiver.receive();
-
-        String message = kafkaFlux
+        String message = kafkaKamradtTestReceiver.receive()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
-                .blockFirst()
-                .value();
+                .publishNext()
+                .map(rr -> rr.value())
+                .block(Duration.ofSeconds(10));
         log.info("find on message queue the input value " + message);
         Input actual = objectMapper.readValue(message, Input.class);
         assertEquals(inputValue.getKey(),actual.getKey());
