@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.IncomingContract;
 import net.kamradtfamily.incoming.contract.IncomingException;
 import net.kamradtfamily.incoming.contract.Input;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +46,14 @@ import reactor.core.publisher.Mono;
 @Component
 public class IncomingClient implements IncomingContract {
 
+    @Value("${incoming.service.baseurl}")
+    String baseUrl;
+
     @Override
     public Mono<String> incoming(Mono<Input> input) throws IncomingException {
         return WebClient
                 .builder()
-                .baseUrl("http://localhost:8081/incoming")
+                .baseUrl(baseUrl + "/incoming")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build()
                 .post()
