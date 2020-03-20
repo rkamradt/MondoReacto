@@ -54,6 +54,7 @@ public class KafkaConfiguration {
     
     private final String kamradtTopic = "kamradt";
     private final String kamradtGroupId = "consumer";
+    private final String kamradtTestGroupId = "testConsumer";
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
@@ -75,7 +76,12 @@ public class KafkaConfiguration {
     KafkaReceiver<String, String> kafkaKamradtReceiver() {
         return kafkaCommonReceiver(kamradtTopic, kamradtGroupId);
     }
-    
+
+    @Bean
+    KafkaReceiver<String, String> kafkaKamradtTestReceiver() {
+        return kafkaCommonReceiver(kamradtTopic, kamradtTestGroupId);
+    }
+
     protected KafkaReceiver<String, String> kafkaCommonReceiver(String topic, String groupId) {
         final Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);

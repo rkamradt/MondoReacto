@@ -6,6 +6,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.Input;
 
@@ -20,7 +22,7 @@ import reactor.kafka.receiver.ReceiverRecord;
 public class Stepdefs extends SpringEnabledSteps {
 
     @Autowired
-    KafkaReceiver<String, String> kafkaKamradtReceiver;
+    KafkaReceiver<String, String> kafkaKamradtTestReceiver;
     
     @Autowired
     IncomingClient incomingClient;
@@ -34,9 +36,9 @@ public class Stepdefs extends SpringEnabledSteps {
     @Given("a good input value")
     public void generateGoodInputValue() {
         inputValue = Input.builder()
-                .value("value")
-                .key("key")
-                .optionalValue("")
+                .value("test value")
+                .key(UUID.randomUUID().toString())
+                .optionalValue("optional test value")
                 .build();
         log.info("generated good input value " + inputValue);
     }
@@ -54,14 +56,16 @@ public class Stepdefs extends SpringEnabledSteps {
         httpStatus = 200; // all other status will throw an exception
     }
 
-    @Then("the return value should be {int}")
+    @Then("the return value should be {value}")
     public void checkReturnValue(int value) {
-        assertEquals(200, httpStatus);
+        log.info("checking return value of " + httpStatus + " expected " + value);
+        assertEquals(value, httpStatus);
     }
 
     @Then("the input value should be found on the message queue")
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
-        Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaKamradtReceiver.receive();
+        log.info("looking for input value on the message queue");
+        Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaKamradtTestReceiver.receive();
 
         String message = kafkaFlux
                 .doOnNext(r -> r.receiverOffset().acknowledge())
