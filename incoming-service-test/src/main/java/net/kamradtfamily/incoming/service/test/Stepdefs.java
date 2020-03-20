@@ -45,7 +45,8 @@ public class Stepdefs extends SpringEnabledSteps {
     public void callThePutMethodWithInputValue() {
         log.info("call the put method with input value " + inputValue);
         try {
-            incomingClient.incoming(Mono.just(inputValue));
+            incomingClient.incoming(Mono.just(inputValue))
+                .subscribe(s -> log.info("post returned " + s), t -> log.error("error in post", t));
         } catch (Exception ex) {
             log.info("unexpected exception thrown", ex);
             fail();
