@@ -20,7 +20,7 @@ import reactor.kafka.receiver.ReceiverRecord;
 public class Stepdefs extends SpringEnabledSteps {
 
     @Autowired
-    KafkaReceiver kafkaReceiver;
+    KafkaReceiver<String, String> kafkaKamradtReceiver;
     
     @Autowired
     IncomingClient incomingClient;
@@ -60,7 +60,7 @@ public class Stepdefs extends SpringEnabledSteps {
 
     @Then("the input value should be found on the message queue")
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
-        Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaReceiver.receive();
+        Flux<ReceiverRecord<String, String>> kafkaFlux = kafkaKamradtReceiver.receive();
 
         String message = kafkaFlux
                 .doOnNext(r -> r.receiverOffset().acknowledge())

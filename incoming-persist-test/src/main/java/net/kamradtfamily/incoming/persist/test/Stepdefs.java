@@ -24,7 +24,7 @@ import reactor.kafka.sender.SenderRecord;
 public class Stepdefs extends SpringEnabledSteps {
 
     @Autowired
-    KafkaSender kafkaSender;
+    private KafkaSender<String, String> kafkaKamradtSender;
 
     @Autowired
     ReactiveMongoTemplate template;
@@ -46,7 +46,7 @@ public class Stepdefs extends SpringEnabledSteps {
 
     @When("the input value is handed to the message queue")
     public void putTheInputValueOnTheMessageQueue() {
-        final Mono<SenderRecord> message = Mono.just(inputValue).map(i -> {
+        final Mono<SenderRecord<String, String, Integer>> message = Mono.just(inputValue).map(i -> {
             try {
                 String string = objectMapper.writeValueAsString(i);
                 log.info("incoming string " + string + " being send to message queue");
@@ -55,8 +55,8 @@ public class Stepdefs extends SpringEnabledSteps {
                 throw new RuntimeException("error parsing input", ex);
             }
         })
-                .map(m -> SenderRecord.create(new ProducerRecord<>("kamradt", "key", m), m));
-        kafkaSender.<String>send(message)
+                .map(m -> SenderRecord.<String, String, Integer>create(new ProducerRecord<>("kamradt", "key", m), 1));
+        kafkaKamradtSender.send(message)
                 .doOnError(e -> log.error("Send failed", e))
                 .then();
     }
