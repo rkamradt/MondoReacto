@@ -67,15 +67,24 @@ public class Stepdefs extends SpringEnabledSteps {
     @Then("the input value should be found on the message queue")
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
         log.info("looking for input value on the message queue");
-        String message = kafkaKamradtTestReceiver.receive()
+        Input actual = kafkaKamradtTestReceiver.receive()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
+                .map(r -> parseToInput(r.value()))
+                .filter(i -> i.isPresent())
+                .map(i -> i.get())
+                .filter(i -> i.equals(inputValue))
                 .publishNext()
-                .map(rr -> rr.value())
                 .block(Duration.ofSeconds(10));
-        log.info("find on message queue the input value " + message);
-        Input actual = objectMapper.readValue(message, Input.class);
-        assertEquals(inputValue.getKey(),actual.getKey());
-        assertEquals(inputValue.getOptionalValue(), actual.getOptionalValue());
-        assertEquals(inputValue.getValue(), actual.getValue());
+        log.info("find on message queue the input value " + actual);
+        assertEquals(inputValue, actual);
+    }
+
+    private Optional<Input> parseToInput(String message) {
+        try {
+            return Optional.ofNullable(objectMapper.readValue(message, Input.class));
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 }
