@@ -66,7 +66,6 @@ public class Stepdefs extends SpringEnabledSteps {
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
         log.info("looking for input value on the message queue");
         Input actual = kafkaKamradtTestReceiver.receive()
-                .log()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .doOnNext(r -> log.info("receiver record " + r))
                 .map(r -> parseToInput(r.value()))
