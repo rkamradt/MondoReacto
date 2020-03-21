@@ -15,6 +15,7 @@ import net.kamradtfamily.incoming.contract.Input;
 
 import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import reactor.core.publisher.Mono;
 import reactor.kafka.receiver.KafkaReceiver;
 
@@ -22,15 +23,14 @@ import reactor.kafka.receiver.KafkaReceiver;
 public class Stepdefs extends SpringEnabledSteps {
 
     @Autowired
-    KafkaReceiver<String, String> kafkaKamradtTestReceiver;
-
-    @Autowired
     IncomingClient incomingClient;
-
+    @Autowired
+    ReactiveMongoTemplate template;
     @Autowired
     ObjectMapper objectMapper;
 
     Input inputValue;
+    Input actualValue;
     int httpStatus;
 
     @Given("a good input value")
@@ -43,17 +43,23 @@ public class Stepdefs extends SpringEnabledSteps {
         log.info("generated good input value " + inputValue);
     }
 
-    @When("the incoming service put is called")
-    public void callThePutMethodWithInputValue() {
-        log.info("call the put method with input value " + inputValue);
+    @Given("the input value is inserted in mongo")
+    public void insertIntoMongo() {
+        template.save(inputValue)
+                .block(Duration.ofSeconds(10))
+    }
+
+    @When("the incoming service get is called with the key value")
+    public void callTheGetMethodWithKeyValue() {
+        log.info("call the get method with key value " + inputValue.getKey());
         try {
-            incomingClient.incoming(Mono.just(inputValue))
-                .subscribe(s -> log.info("post returned " + s), t -> log.error("error in post", t));
+            actualValue = parseToInput(incomingClient.incoming(Mono.just(inputValue))
+                .block(Duration.ofSeconds(10))).get();
         } catch (Exception ex) {
             log.info("unexpected exception thrown", ex);
             fail();
         }
-        httpStatus = 202; // all other status will throw an exception
+        httpStatus = 200; // all other status will throw an exception
     }
 
     @Then("the return value should be {int}")
@@ -62,23 +68,9 @@ public class Stepdefs extends SpringEnabledSteps {
         assertEquals(value, httpStatus);
     }
 
-    @Then("the input value should be found on the message queue")
+    @Then("the return value equal to the input value")
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
-        log.info("looking for input value on the message queue");
-        Input actual = kafkaKamradtTestReceiver.receive()
-                .doOnNext(r -> r.receiverOffset().acknowledge())
-                .doOnNext(r -> log.info("receiver record " + r))
-                .map(r -> parseToInput(r.value()))
-                .filter(i -> i.isPresent())
-                .map(i -> i.get())
-                .doOnNext(i -> log.info("prefilter value " + i))
-                .filter(i -> i.equals(inputValue))
-                .doOnNext(i -> log.info("postfilter value " + i))
-                .publishNext()
-                .doOnNext(i -> log.info("published value " + i))
-                .block(Duration.ofSeconds(10));
-        log.info("find on message queue the input value " + actual);
-        assertEquals(inputValue, actual);
+        assertEquals(inputValue, actualValue);
     }
 
     private Optional<Input> parseToInput(String message) {

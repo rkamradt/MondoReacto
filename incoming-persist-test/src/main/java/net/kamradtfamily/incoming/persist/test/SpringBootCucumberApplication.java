@@ -34,6 +34,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author randalkamradt
  */
 @SpringBootApplication
+@ComponentScan(basePackages = "net.kamradtfamily.incoming")
 public class SpringBootCucumberApplication {
 
     public static void main(final String[] args) throws Throwable {

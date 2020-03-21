@@ -51,25 +51,31 @@ public class IncomingClient implements IncomingContract {
 
     @Override
     public Mono<String> incoming(Mono<Input> input) throws IncomingException {
+        throw new UnsupportedOperationException("Not supported by this implementation");
+    }
+
+    @Override
+    public Flux<Input> alloutput() throws IncomingException {
         return WebClient
                 .builder()
                 .baseUrl(baseUrl + "/incoming")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build()
-                .post()
-                .body(BodyInserters.fromPublisher(input, Input.class))
+                .get()
                 .retrieve()
-                .bodyToMono(String.class);
-    }
-
-    @Override
-    public Flux<Input> alloutput() throws IncomingException {
-        throw new UnsupportedOperationException("Not supported by this implementation");
+                .bodyToFlux(Input.class);
      }
 
     @Override
     public Mono<Input> output(String key) throws IncomingException {
-        throw new UnsupportedOperationException("Not supported by this implementation");
+        return WebClient
+                .builder()
+                .baseUrl(baseUrl + "/incoming/" + key)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build()
+                .get()
+                .retrieve()
+                .bodyToMono(Input.class);
     }
 
 }
