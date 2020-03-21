@@ -46,7 +46,7 @@ public class Stepdefs extends SpringEnabledSteps {
     @Given("the input value is inserted in mongo")
     public void insertIntoMongo() {
         template.save(inputValue)
-                .block(Duration.ofSeconds(10))
+                .block(Duration.ofSeconds(10));
     }
 
     @When("the incoming service get is called with the key value")
