@@ -53,8 +53,8 @@ public class Stepdefs extends SpringEnabledSteps {
     public void callTheGetMethodWithKeyValue() {
         log.info("call the get method with key value " + inputValue.getKey());
         try {
-            actualValue = parseToInput(incomingClient.incoming(Mono.just(inputValue))
-                .block(Duration.ofSeconds(10))).get();
+            actualValue = incomingClient.output(inputValue.getKey())
+                .block(Duration.ofSeconds(10));
         } catch (Exception ex) {
             log.info("unexpected exception thrown", ex);
             fail();
