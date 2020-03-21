@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.Input;
 
 import static org.junit.Assert.*;
+
+import net.kamradtfamily.incoming.datamodel.MondoData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import reactor.core.publisher.Mono;
@@ -31,6 +33,7 @@ public class Stepdefs extends SpringEnabledSteps {
 
     Input inputValue;
     Input actualValue;
+    MondoData saved;
     int httpStatus;
 
     @Given("a good input value")
@@ -45,8 +48,9 @@ public class Stepdefs extends SpringEnabledSteps {
 
     @Given("the input value is inserted in mongo")
     public void insertIntoMongo() {
-        template.save(inputValue)
+        saved = template.save(mapToMondoData(inputValue))
                 .block(Duration.ofSeconds(10));
+        log.info("saved " + saved);
     }
 
     @When("the incoming service get is called with the key value")
@@ -73,12 +77,12 @@ public class Stepdefs extends SpringEnabledSteps {
         assertEquals(inputValue, actualValue);
     }
 
-    private Optional<Input> parseToInput(String message) {
-        try {
-            return Optional.ofNullable(objectMapper.readValue(message, Input.class));
-        } catch (Throwable e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+    private MondoData mapToMondoData(Input value) {
+        return MondoData.builder()
+                .id(value.getKey())
+                .name(value.getValue())
+                .description(value.getOptionalValue())
+                .build();
     }
+
 }
