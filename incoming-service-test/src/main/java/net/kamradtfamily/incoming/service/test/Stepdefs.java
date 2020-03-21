@@ -15,10 +15,8 @@ import net.kamradtfamily.incoming.contract.Input;
 
 import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.kafka.receiver.KafkaReceiver;
-import reactor.kafka.receiver.ReceiverRecord;
 
 @Slf4j
 public class Stepdefs extends SpringEnabledSteps {
@@ -68,6 +66,7 @@ public class Stepdefs extends SpringEnabledSteps {
     public void findInputValueOnMessageQueue() throws JsonProcessingException {
         log.info("looking for input value on the message queue");
         Input actual = kafkaKamradtTestReceiver.receive()
+                .log()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .doOnNext(r -> log.info("receiver record " + r))
                 .map(r -> parseToInput(r.value()))
@@ -76,9 +75,9 @@ public class Stepdefs extends SpringEnabledSteps {
                 .doOnNext(i -> log.info("prefilter value " + i))
                 .filter(i -> i.equals(inputValue))
                 .doOnNext(i -> log.info("postfilter value " + i))
-                .take(1)
+                .publishNext()
                 .doOnNext(i -> log.info("published value " + i))
-                .blockFirst(Duration.ofSeconds(10));
+                .block(Duration.ofSeconds(10));
         log.info("find on message queue the input value " + actual);
         assertEquals(inputValue, actual);
     }
