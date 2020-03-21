@@ -59,7 +59,7 @@ public class IncomingClient implements IncomingContract {
         return WebClient
                 .builder()
                 .baseUrl(baseUrl + "/incoming")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .build()
                 .get()
                 .retrieve()
@@ -71,7 +71,7 @@ public class IncomingClient implements IncomingContract {
         return WebClient
                 .builder()
                 .baseUrl(baseUrl + "/incoming/" + key)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .build()
                 .get()
                 .retrieve()
