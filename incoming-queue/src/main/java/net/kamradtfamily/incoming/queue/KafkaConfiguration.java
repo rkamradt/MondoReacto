@@ -90,6 +90,7 @@ public class KafkaConfiguration {
         configProps.put(ConsumerConfig.CLIENT_ID_CONFIG, topic);
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+        configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         return new DefaultKafkaReceiver<String, String>(
                 ConsumerFactory.INSTANCE,
