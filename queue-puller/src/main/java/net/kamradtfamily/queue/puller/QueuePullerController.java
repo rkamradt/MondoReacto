@@ -45,11 +45,23 @@ import reactor.kafka.receiver.ReceiverRecord;
 public class QueuePullerController {
 
     @Autowired
-    KafkaReceiver<String,String> kafkaReceiver;
+    KafkaReceiver<String,String> kafkaKamradtTestReceiver;
+
+    @Autowired
+    KafkaReceiver<String,String> kafkaKamradtReceiver;
 
     @GetMapping(path="/kamradt/consumer", produces = MediaType.APPLICATION_JSON_VALUE)
     Mono<String> getFromKamradtConsumer() {
-        return kafkaReceiver
+        return kafkaKamradtReceiver
+                .receive()
+                .doOnNext(r -> r.receiverOffset().acknowledge())
+                .map(ReceiverRecord::value)
+                .publishNext();
+    }
+
+    @GetMapping(path="/kamradt/test/consumer", produces = MediaType.APPLICATION_JSON_VALUE)
+    Mono<String> getFromKamradtTestConsumer() {
+        return kafkaKamradtTestReceiver
                 .receive()
                 .doOnNext(r -> r.receiverOffset().acknowledge())
                 .map(ReceiverRecord::value)
