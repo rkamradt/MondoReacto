@@ -1,0 +1,5 @@
+net/kamradtfamily/incoming/read/service/test/SpringBootCucumberApplication.class
+net/kamradtfamily/incoming/read/service/test/Stepdefs.class
+net/kamradtfamily/incoming/read/service/test/SpringEnabledSteps.class
+net/kamradtfamily/incoming/read/service/test/IncomingClient.class
+net/kamradtfamily/incoming/read/service/test/RunCucumberTest.class

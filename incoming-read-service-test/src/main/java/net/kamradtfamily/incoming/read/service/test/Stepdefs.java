@@ -1,4 +1,4 @@
-package net.kamradtfamily.incoming.service.test;
+package net.kamradtfamily.incoming.read.service.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,10 +23,10 @@ public class Stepdefs extends SpringEnabledSteps {
 
     @Autowired
     KafkaReceiver<String, String> kafkaKamradtTestReceiver;
-    
+
     @Autowired
     IncomingClient incomingClient;
-    
+
     @Autowired
     ObjectMapper objectMapper;
 

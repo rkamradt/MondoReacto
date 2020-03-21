@@ -25,6 +25,7 @@
         <module>incoming-datamodel</module>
         <module>incoming-persist-test</module>
         <module>incoming-read-service</module>
+        <module>incoming-read-service-test</module>
     </modules>
     <properties>
         <java.version>11</java.version>
