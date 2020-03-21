@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import net.kamradtfamily.incoming.contract.Input;
 import net.kamradtfamily.incoming.datamodel.MondoData;
